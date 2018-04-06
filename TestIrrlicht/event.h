@@ -7,8 +7,13 @@ using namespace irr;
 class EventReceiver : public irr::IEventReceiver {
 
 public :
-	//ISceneManager * scene;
-
+	//
 	virtual bool OnEvent(const SEvent& event);
+
+	void setSceneManager(irr::scene::ISceneManager* smgr);
+
+
+private:
+	irr::scene::ISceneManager * scene;
 
 };
