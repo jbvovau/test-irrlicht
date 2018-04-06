@@ -25,8 +25,8 @@ int main() {
 	IrrlichtDevice *device =
 		createDevice(
 			video::EDT_DIRECT3D9,	//deviceType: Type of the device. This can currently be the Null-device, one of the two software renderers, D3D8, D3D9, or OpenGL. In this example we use EDT_SOFTWARE, but to try out, you might want to change it to EDT_BURNINGSVIDEO, EDT_NULL, EDT_DIRECT3D8, EDT_DIRECT3D9, or EDT_OPENGL.
-			dimension2d<u32>(400, 280), //windowSize: Size of the Window or screen in FullScreenMode to be created. In this example we use 640x480.
-			16, //bits: Amount of color bits per pixel.This should be 16 or 32. The parameter is often ignored when running in windowed mode.
+			dimension2d<u32>(1900, 900), //windowSize: Size of the Window or screen in FullScreenMode to be created. In this example we use 640x480.
+			64, //bits: Amount of color bits per pixel.This should be 16 or 32. The parameter is often ignored when running in windowed mode.
 			false,	//fullscreen: Specifies if we want the device to run in fullscreen mode or not.
 			false,	//stencilbuffer: Specifies if we want to use the stencil buffer (for drawing shadows).
 			false,	//vsync : Specifies if we want to have vsync enabled, this is only useful in fullscreen mode.
@@ -75,11 +75,11 @@ int main() {
 	//add camera
 	ICameraSceneNode* camera = smgr->addCameraSceneNodeFPS(0, 
 		100, //roateSpeed
-		0.1f, //movespeed
+		0.01f, //movespeed
 		-1,	//id
 		keyMap, //key map
 		8,	//mapsize
-		false, //noVerticalMovement ,
+		true, //noVerticalMovement ,
 		0.5f, //jump speed
 		false, //invert mouse
 		true //make active
@@ -95,7 +95,7 @@ int main() {
 
 	//mesh ground
 	
-	IAnimatedMesh* meshSol = smgr->addHillPlaneMesh("sol", dimension2df(1, 1), dimension2du(64, 64), 0, 0, dimension2df(0, 0));
+	IAnimatedMesh* meshSol = smgr->addHillPlaneMesh("sol", dimension2df(1, 1), dimension2du(64, 64), 0, 0, dimension2df(0,0),dimension2df(64,64));
 	IMeshSceneNode* sol = smgr->addMeshSceneNode(meshSol);
 	sol->setPosition(vector3df(0, -0.5, 0));
 	sol->setMaterialFlag(E_MATERIAL_FLAG::EMF_LIGHTING, false);
