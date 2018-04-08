@@ -1,5 +1,5 @@
 # Blender MTL File: 'blob.blend'
-# Material Count: 8
+# Material Count: 9
 
 newmtl None
 Ns 0
@@ -18,7 +18,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\Users\VOVAU\Source\Repos\ConsoleApp1\ConsoleApp1\mur.png
+map_Kd D:\testirrlicht\TestIrrlicht\Img\dry.png
 
 newmtl None_NONE_NONE
 Ns 0.000000
@@ -30,7 +30,7 @@ Ni 1.000000
 d 1.000000
 illum 2
 
-newmtl None_NONE_dry.png
+newmtl None_NONE_mur.png
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -39,7 +39,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd D:\testirrlicht\TestIrrlicht\Img\dry.png
+map_Kd C:\Users\VOVAU\Source\Repos\ConsoleApp1\ConsoleApp1\mur.png
 
 newmtl None_NONE_mur.png.001
 Ns 0.000000
@@ -78,3 +78,14 @@ Ks 0.8 0.8 0.8
 d 1
 illum 2
 map_Kd D:\testirrlicht\TestIrrlicht\Img\mur.png
+
+newmtl blorb
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd blorb.png
