@@ -126,7 +126,7 @@ int main() {
 	IAnimatedMesh* meshBlob = smgr->getMesh("Map/blob2.obj");
 	ISceneNode * complix = smgr->addMeshSceneNode(meshBlob);
 	complix->setPosition(vector3df(0, 0, 0));
-	complix->setMaterialFlag(E_MATERIAL_FLAG::EMF_LIGHTING, true);
+	complix->setMaterialFlag(E_MATERIAL_FLAG::EMF_LIGHTING, false);
 	complix->setMaterialFlag(E_MATERIAL_FLAG::EMF_FOG_ENABLE, true);
 	//complix->setMaterialTexture(0, textureMur);
 	//complix->setScale(vector3df(1, 1, 1) / 16);
@@ -150,7 +150,21 @@ int main() {
 
 	device->getCursorControl()->setVisible(false);
 
-          
+	auto monster = smgr->addBillboardSceneNode(0, vector2df(2, 2), vector3df(4, 0, 4), 0);
+	monster->setMaterialTexture(0, driver->getTexture("Img/dragon.png"));
+	monster->setMaterialFlag(E_MATERIAL_FLAG::EMF_LIGHTING, false);
+	monster->setMaterialType(E_MATERIAL_TYPE::EMT_TRANSPARENT_ALPHA_CHANNEL);
+
+	ISceneNodeAnimator* fly = smgr->createFlyStraightAnimator(vector3df(0, 0, 0), vector3df(4, 4, 4), 3000, true, true);
+	monster->addAnimator(fly);
+	fly->drop();
+
+	auto meshExited = smgr->getMesh("Map/hips.b3d");
+	auto exited = smgr->addAnimatedMeshSceneNode(meshExited, 0, -1, vector3df(6, 0, 0));
+	exited->setMaterialTexture(0, driver->getTexture("Map/hips.png"));
+	exited->setFrameLoop(1,200);
+	exited->setAnimationSpeed(24);
+	
 
 	bool alive = true;
 
