@@ -5,7 +5,6 @@
 #endif
 
 #include <irrlicht.h>
-#include "prout.h"
 #include "event.h"
 
 using namespace irr;
@@ -24,7 +23,7 @@ int main() {
 	              
 	IrrlichtDevice *device =
 		createDevice(
-			video::EDT_DIRECT3D9,	//deviceType: Type of the device. This can currently be the Null-device, one of the two software renderers, D3D8, D3D9, or OpenGL. In this example we use EDT_SOFTWARE, but to try out, you might want to change it to EDT_BURNINGSVIDEO, EDT_NULL, EDT_DIRECT3D8, EDT_DIRECT3D9, or EDT_OPENGL.
+			video::EDT_OPENGL,	//deviceType: Type of the device. This can currently be the Null-device, one of the two software renderers, D3D8, D3D9, or OpenGL. In this example we use EDT_OPENGL.
 			dimension2d<u32>(1920, 1080), //windowSize: Size of the Window or screen in FullScreenMode to be created. In this example we use 640x480.
 			32, //bits: Amount of color bits per pixel.This should be 16 or 32. The parameter is often ignored when running in windowed mode.
 			true,	//fullscreen: Specifies if we want the device to run in fullscreen mode or not.
@@ -111,11 +110,6 @@ int main() {
 	//test scene irrlicht
 	//bool loaded = smgr->loadScene("scene.irr");
 
-	auto p = new Prout();
-	s32 v = p->getTrenteDeux();
-	s32 a = p->getNimp();
-	p->nimp();
-
 	ISceneCollisionManager* collManager = smgr->getSceneCollisionManager();
 
 	//light
@@ -124,52 +118,70 @@ int main() {
 
 	//test obj
 	IAnimatedMesh* meshBlob = smgr->getMesh("Map/blob2.obj");
+	if (!meshBlob) {
+		device->getLogger()->log(L"Erreur : impossible de charger Map/blob2.obj", ELL_ERROR);
+		return 1;
+	}
 	ISceneNode * complix = smgr->addMeshSceneNode(meshBlob);
-	complix->setPosition(vector3df(0, 0, 0));
-	complix->setMaterialFlag(E_MATERIAL_FLAG::EMF_LIGHTING, false);
-	complix->setMaterialFlag(E_MATERIAL_FLAG::EMF_FOG_ENABLE, true);
-	//complix->setMaterialTexture(0, textureMur);
-	//complix->setScale(vector3df(1, 1, 1) / 16);
+	if (complix) {
+		complix->setPosition(vector3df(0, 0, 0));
+		complix->setMaterialFlag(E_MATERIAL_FLAG::EMF_LIGHTING, false);
+		complix->setMaterialFlag(E_MATERIAL_FLAG::EMF_FOG_ENABLE, true);
+	}
 
-	scene::IMeshSceneNode* q3node = 0;
-	q3node = smgr->addOctreeSceneNode(meshBlob);
-	ITriangleSelector* selector = smgr->createOctreeTriangleSelector(
-		meshBlob, q3node, 128);
-	q3node->setTriangleSelector(selector);
-
-	scene::ISceneNodeAnimator* anim = smgr->createCollisionResponseAnimator(selector,
-		camera,
-		core::vector3df(1, 1, 1),	//size of body (camera)
-		core::vector3df(0, -0.2f, 0),	//gravity
-		core::vector3df(0, 1, 0)	//position
-	);
-
-	camera->addAnimator(anim);
-	anim->drop();
-	selector->drop();
+	scene::IMeshSceneNode* q3node = smgr->addOctreeSceneNode(meshBlob);
+	if (q3node) {
+		ITriangleSelector* selector = smgr->createOctreeTriangleSelector(meshBlob, q3node, 128);
+		if (selector) {
+			q3node->setTriangleSelector(selector);
+			scene::ISceneNodeAnimator* anim = smgr->createCollisionResponseAnimator(
+				selector,
+				camera,
+				core::vector3df(1, 1, 1),	//size of body (camera)
+				core::vector3df(0, -0.2f, 0),	//gravity
+				core::vector3df(0, 1, 0)	//position
+			);
+			if (anim) {
+				camera->addAnimator(anim);
+				anim->drop();
+			}
+			selector->drop();
+		}
+	}
 
 	device->getCursorControl()->setVisible(false);
 
 	auto monster = smgr->addBillboardSceneNode(0, vector2df(2, 2), vector3df(4, 0, 4), 0);
-	monster->setMaterialTexture(0, driver->getTexture("Img/dragon.png"));
-	monster->setMaterialFlag(E_MATERIAL_FLAG::EMF_LIGHTING, false);
-	monster->setMaterialType(E_MATERIAL_TYPE::EMT_TRANSPARENT_ALPHA_CHANNEL);
+	if (monster) {
+		ITexture* dragonTexture = driver->getTexture("Img/dragon.png");
+		if (dragonTexture) {
+			monster->setMaterialTexture(0, dragonTexture);
+		}
+		monster->setMaterialFlag(E_MATERIAL_FLAG::EMF_LIGHTING, false);
+		monster->setMaterialType(E_MATERIAL_TYPE::EMT_TRANSPARENT_ALPHA_CHANNEL);
 
-	ISceneNodeAnimator* fly = smgr->createFlyStraightAnimator(vector3df(0, 0, 0), vector3df(4, 4, 4), 3000, true, true);
-	monster->addAnimator(fly);
-	fly->drop();
+		ISceneNodeAnimator* fly = smgr->createFlyStraightAnimator(vector3df(0, 0, 0), vector3df(4, 4, 4), 3000, true, true);
+		if (fly) {
+			monster->addAnimator(fly);
+			fly->drop();
+		}
+	}
 
 	auto meshExited = smgr->getMesh("Map/hips.b3d");
 	auto exited = smgr->addAnimatedMeshSceneNode(meshExited, 0, -1, vector3df(6, 0, 0));
-	exited->setMaterialTexture(0, driver->getTexture("Map/hips.png"));
-	exited->setFrameLoop(1,200);
-	exited->setAnimationSpeed(24);
+	if (exited && meshExited) {
+		ITexture* hipsTexture = driver->getTexture("Map/hips.png");
+		if (hipsTexture) {
+			exited->setMaterialTexture(0, hipsTexture);
+		}
+		exited->setFrameLoop(1, 200);
+		exited->setAnimationSpeed(24);
+	}
 	
 
 	bool alive = true;
 
 	while (device->run() && alive) {
-		//tmp
 		driver->beginScene(true, true, SColor(255, 100, 101, 140));
 		smgr->drawAll();
 		guienv->drawAll();
@@ -178,8 +190,19 @@ int main() {
 		if (camera->getPosition().Y < -300.f) {
 			alive = false;
 		}
-
 	}
+
+	// Libération des ressources
+	if (meshBlob) meshBlob->drop();
+	if (complix) complix->drop();
+	if (q3node) q3node->drop();
+	if (meshExited) meshExited->drop();
+	if (exited) exited->drop();
+	if (monster) monster->drop();
+	if (textureMur) textureMur->drop();
+	if (textureSol) textureSol->drop();
+	if (skybox) skybox->drop();
+	if (camera) camera->drop();
 
 	device->drop();
 
